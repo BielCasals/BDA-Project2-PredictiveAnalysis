@@ -215,23 +215,11 @@ def format_load_lookup_tables (landigzone_path, formatted_path, spark):
     
     for batch in os.listdir(landigzone_path):
         if batch != "_processed_log.json":
-            for file_imm in os.listdir(f"{landigzone_path}/{batch}/immigrants_extended.csv"):
-                if file_imm != "_SUCCESS":
-                    imm_df = spark.read.csv(f"{landigzone_path}/{batch}/immigrants_extended.csv/{file_imm}", header=True, inferSchema=True)
-                    immigrants_lookup_df = (immigrants_lookup_df.union(imm_df)
-                                            ) if immigrants_lookup_df else imm_df
             for file_name in os.listdir(f"{landigzone_path}/{batch}/income_opendatabcn_extended.csv"):
                 if file_name != "_SUCCESS":
                     name_df = spark.read.csv(f"{landigzone_path}/{batch}/income_opendatabcn_extended.csv/{file_name}", header=True, inferSchema=True)
                     names_lookup_df = (names_lookup_df.union(name_df)
                                             ) if names_lookup_df else name_df
-
-    formatted_immigrants_lookup_df = immigrants_lookup_df.select(
-        col("Codi_Dimensio").alias("dimension_code").cast(IntegerType()),
-        col("Desc_Dimensio").alias("dimension_description"),
-        col("Codi_Valor").alias("value_code").cast(IntegerType()),
-        col("Desc_Valor_EN").alias("value_description")
-    )
 
     formatted_names_lookup_df = names_lookup_df.select(
         col("district").alias("district_name"),
@@ -244,8 +232,6 @@ def format_load_lookup_tables (landigzone_path, formatted_path, spark):
         col("neighborhood_id").alias("neighborhood_id")
     )
 
-    # Save the formatted lookup table    
-    save_df(formatted_immigrants_lookup_df, "immigrants_lookup", formatted_path)
     save_df(formatted_names_lookup_df, "names_lookup", formatted_path)
 
 

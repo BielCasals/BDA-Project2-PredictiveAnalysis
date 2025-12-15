@@ -1,7 +1,7 @@
 """
 Consume clean data from the exploitation zone to train 
 predictive models and track the experiments using MLflow
-Upgraded with Optuna to automatically train and select the BEST Model
+Upgraded with Optuna to automatically train and select best hyperparameter tuning efficiently
 Implementing B.1 and B.2 in the same script
 """
 import os

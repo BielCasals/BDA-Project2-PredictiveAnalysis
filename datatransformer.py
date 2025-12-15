@@ -1,3 +1,8 @@
+"""
+Data Transformer: Get data from mongodb and create a data table with the transformed data to apply predictive analysis
+"""
+
+
 from pyspark import SparkConf
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, sum as _sum, count, when, first, desc
@@ -27,17 +32,6 @@ def saveDelta_df(df, transformed_path: str):
     
 
 
-# def get_year_range(df, df_name):
-#     """
-#     Prints the year range (min and max) for a given DataFrame.
-#     """
-#     try:
-#         year_range = df.selectExpr("min(year) as min_year", "max(year) as max_year").collect()
-#         print(f"{df_name} Year Range: {year_range[0]['min_year']} - {year_range[0]['max_year']}")
-#     except Exception as e:
-#         print(f"Error getting year range for {df_name}: {e}")
-
-
 def transform_data(spark: SparkSession, formatted_path: str, transformed_path: str):
     """
     Transforms formatted data to create features for predictive analytics
@@ -55,7 +49,7 @@ def transform_data(spark: SparkSession, formatted_path: str, transformed_path: s
     
 
     
-    #applying transformations for the desired analysis:
+    # Applying transformations for the desired analysis:
 
     #For immigrants: group by year, neighborhood and getting the total immigrants (we treat all immigrants as equal for simplicity)
     df_immigrants = df_immigrants.fillna({"value":0})
@@ -69,12 +63,6 @@ def transform_data(spark: SparkSession, formatted_path: str, transformed_path: s
                         _sum("count").alias("total_unemployed"))
 
 
-    # # Example usage for all DataFrames
-    # get_year_range(df_income, "Income")
-    # get_year_range(df_density, "Density")
-    # get_year_range(df_agg_immigrants, "Immigrants")
-    # get_year_range(df_unemployment, "Unemployment")
-    # Density and Income is not necessary as we already have it on a year and neighborhood level.
 
     #Joining dataframes:
     df_base = df_income.filter(col("RDF_index").isNotNull())
@@ -99,7 +87,7 @@ def transform_data(spark: SparkSession, formatted_path: str, transformed_path: s
         ["year", "neighborhood_code"],
         "left"
     )
-
+    print(f"df_step3: {df_step3.count()} rows, {len(df_step3.columns)} columns")
     #drop years where we don't have data:
     df_temp = df_step3.filter(col("net_density").isNotNull() & col("total_immigrants").isNotNull() 
                               & col("total_unemployed").isNotNull()
@@ -120,6 +108,10 @@ def transform_data(spark: SparkSession, formatted_path: str, transformed_path: s
         col("total_immigrants"),
         col("total_unemployed")
     )
+
+    #maybe try imputing values on exploitation (but this for a more complex analysis)
+    print(f"df_temp: {df_temp.count()} rows, {len(df_temp.columns)} columns")
+
 
 
     # CHECKING ALL OKAY

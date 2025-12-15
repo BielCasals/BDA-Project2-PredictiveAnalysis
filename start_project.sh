@@ -22,7 +22,7 @@ fi
 
 echo -e "${BLUE}--- [2/4] Activating Virtual Environment ---${NC}"
 # Adjust the path if your venv is named differently
-source spark_venv/bin/activate
+source de_venv/bin/activate
 
 echo -e "${BLUE}--- [3/4] Starting MLflow Tracking Server ---${NC}"
 # Run in background (&)
@@ -46,7 +46,7 @@ airflow db init
 
 airflow users create \
     --username admin \
-    --firstname Biel \
+    --firstname User \
     --lastname Student \
     --role Admin \
     --email admin@example.com \
