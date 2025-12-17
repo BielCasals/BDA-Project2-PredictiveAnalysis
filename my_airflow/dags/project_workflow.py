@@ -6,7 +6,9 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from datetime import datetime
 
-PROJECT_PATH = "/mnt/c/Users/bielc/OneDrive/Documentos/UPC/Q5/BDA/Projecte2-PredictiveAnalytics-LOCAL"
+from config_airflow import PROJECT_ROOT
+
+PROJECT_PATH = PROJECT_ROOT
 
 #optional:
 env_config = {

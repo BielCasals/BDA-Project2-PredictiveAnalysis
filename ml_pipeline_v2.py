@@ -168,7 +168,8 @@ def run_ml_pipeline(exploitation_path: str, spark: SparkSession):
         #starting the optimizers and defining the number of trials
         study.optimize(
             lambda trial: objective(trial, vector_assembler, scaler, train_data, rmse_evaluator),
-            n_trials=25, 
+            #number of trials(comparisons and train of the 3 models) with hyperparameter tuning
+            n_trials=20, 
             callbacks=[mlflow_callback])
 
         print(f"Winner Model & Params: {study.best_params}")
