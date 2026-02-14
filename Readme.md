@@ -1,5 +1,6 @@
 ## Project2 BDA- Predictive Analysis
-Project focused on building an end-to-end data workflow: from raw data ingestion and necessary treatment to model training, evaluation, and orchestration using data engineering and machine learning tools
+Project focused on building an end-to-end data workflow: from raw data ingestion and necessary treatment to model training, evaluation, and orchestration using data engineering and machine learning tools.
+
 The pipeline uses: 
 Spark + MongoDB + Delta + Airflow + MLflow/Optuna as the pipeline to predict Barcelona neighborhood income index (`RDF_index`) using open data on density, immigration, unemployment, and income.
 
@@ -53,4 +54,5 @@ airflow scheduler &
 - [dataformatter.py](dataformatter.py): Cleans/normalizes each domain dataset, writes JSON to `formattedzone`, and persists to MongoDB collections (`income`, `density`, `immigrants`, `unemployment`, `names_lookup`).
 - [datatransformer.py](datatransformer.py): Reads from MongoDB, joins datasets, engineers ratios, and saves Delta output to `exploitationzone`.
 - [ml_pipeline_v2.py](ml_pipeline_v2.py): Loads Delta data, trains/tunes models with Optuna, logs to MLflow, and saves predictions.
+
 
