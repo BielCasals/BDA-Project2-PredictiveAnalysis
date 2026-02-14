@@ -4,12 +4,19 @@ Project focused on building an end-to-end data workflow: from raw data ingestion
 The pipeline uses: 
 Spark + MongoDB + Delta + Airflow + MLflow/Optuna as the pipeline to predict Barcelona neighborhood income index (`RDF_index`) using open data on density, immigration, unemployment, and income.
 
+
 ### How the pipeline is structured
 - **Raw inputs**: CSV/JSON under `Datasets/` (income, density, immigrants, unemployment, lookup_tables, others). Adjust the path in [config.py](config.py) if your raw data lives elsewhere.
 - **Landing zone**: `landingzone/` stores ingested batches organized per category.
 - **Formatted zone**: `formattedzone/` stores cleaned JSON and writes the same data to MongoDB (`formattedzone` database).
 - **Exploitation zone**: `exploitationzone/` holds Delta tables with engineered features ready for modeling.
 - **Orchestration**: [my_airflow/dags/project_workflow.py](my_airflow/dags/project_workflow.py) runs the collection → formatting → transformation → ML training.
+
+### 🚧 Planned Improvements
+- Enable task-level parallelism using Airflow operators and Spark optimizations
+- Add retry policies and failure handling in DAG definitions
+- Externalize configuration using environment variables or config files
+- Introduce monitoring and alerting for pipeline failures
 
 ### Requirements
 - Python 3.10+ with Java 8+ on the machine (needed by Spark).
@@ -54,5 +61,6 @@ airflow scheduler &
 - [dataformatter.py](dataformatter.py): Cleans/normalizes each domain dataset, writes JSON to `formattedzone`, and persists to MongoDB collections (`income`, `density`, `immigrants`, `unemployment`, `names_lookup`).
 - [datatransformer.py](datatransformer.py): Reads from MongoDB, joins datasets, engineers ratios, and saves Delta output to `exploitationzone`.
 - [ml_pipeline_v2.py](ml_pipeline_v2.py): Loads Delta data, trains/tunes models with Optuna, logs to MLflow, and saves predictions.
+
 
 
